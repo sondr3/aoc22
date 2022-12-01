@@ -1,19 +1,20 @@
-module Day.Day01 (
-    main
-) where
+module Day.Day01
+  ( main,
+  )
+where
 
 import AoC (rawExampleInput, rawInput)
-import Data.Text qualified as T
 import Data.List (sort)
+import Data.Text qualified as T
 
-partA :: [[Int]] -> Int 
+partA :: [[Int]] -> Int
 partA xs = maximum $ map sum xs
 
-partB :: [[Int]] -> Int 
+partB :: [[Int]] -> Int
 partB xs = sum $ take 3 $ reverse $ sort $ map sum xs
 
 main :: IO ()
-main = do 
+main = do
   input <- map (map read . words . T.unpack) . T.splitOn "\n\n" <$> rawInput 1
   example <- map (map read . words . T.unpack) . T.splitOn "\n\n" <$> rawExampleInput 1
   print (partA example)

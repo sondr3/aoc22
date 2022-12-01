@@ -6,12 +6,12 @@ maintainer: sondre@eons.io
 license: MIT
 license-file: LICENSE
 homepage: https://www.eons.io
-tested-with: GHC ==9.4
+tested-with: GHC ==9.2
 extra-source-files: README.md
 build-type: Simple
 
 common config
-  build-depends: base ^>=4.17, text ^>=2
+  build-depends: base ^>=4.16, text ^>=2
   default-language: GHC2021  
   default-extensions: DerivingStrategies DuplicateRecordFields LambdaCase MultiWayIf OverloadedStrings
   ghc-options:

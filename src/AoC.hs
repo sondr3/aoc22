@@ -1,21 +1,22 @@
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 module AoC where
 
-import Text.Printf (printf)
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.IO as TIO
 import Control.Exception (throw)
+import Data.Text (Text)
+import Data.Text qualified as T
+import Data.Text.IO qualified as TIO
 import Data.Void (Void)
 import Text.Megaparsec
 import Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as L
+import Text.Megaparsec.Char.Lexer qualified as L
+import Text.Printf (printf)
 
 inputName :: Int -> FilePath
-inputName = printf "inputs/day%02d.input" 
+inputName = printf "inputs/day%02d.input"
 
 exampleName :: Int -> FilePath
-exampleName = printf "inputs/day%02d.test" 
+exampleName = printf "inputs/day%02d.test"
 
 getInput :: Int -> Parser a -> IO [a]
 getInput i p = do
@@ -27,10 +28,10 @@ getExampleInput i p = do
   input <- readFile (exampleName i)
   pure $ pLines p input
 
-rawExampleInput :: Int -> IO Text 
+rawExampleInput :: Int -> IO Text
 rawExampleInput day = T.strip <$> TIO.readFile (exampleName day)
 
-rawInput :: Int -> IO Text 
+rawInput :: Int -> IO Text
 rawInput day = T.strip <$> TIO.readFile (inputName day)
 
 type Parser = Parsec Void String

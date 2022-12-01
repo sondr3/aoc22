@@ -1,6 +1,6 @@
 module Main where
 
-import qualified AoC (someFunc)
+import AoC qualified (someFunc)
 
 main :: IO ()
 main = do
