@@ -3,5 +3,9 @@ name = "aoc22"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "git-ignore"
+path = "src/main.rs"
+
 [dependencies]
 itertools = "0.10"
