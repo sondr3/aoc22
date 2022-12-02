@@ -12,7 +12,7 @@ impl AoC for Day01 {
         1
     }
 
-    fn parse(input: &str) -> Self::Input {
+    fn parse_one(input: &str) -> Self::Input {
         input
             .split("\n\n")
             .map(|l| l.lines().map(|t| t.parse().unwrap()).collect())
