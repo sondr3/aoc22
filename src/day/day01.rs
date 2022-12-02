@@ -8,6 +8,10 @@ impl AoC for Day01 {
     type Output = usize;
     type Input = Vec<Vec<usize>>;
 
+    fn day() -> usize {
+        1
+    }
+
     fn parse(input: &str) -> Self::Input {
         input
             .split("\n\n")

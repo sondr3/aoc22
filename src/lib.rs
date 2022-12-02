@@ -1,5 +1,7 @@
 mod day;
 
+use std::time::Instant;
+
 use day::day01;
 
 #[macro_export]
@@ -56,22 +58,43 @@ macro_rules! tests {
 
 trait AoC {
     type Output: std::fmt::Display;
-    type Input;
+    type Input: Clone;
 
+    fn day() -> usize;
     fn parse(input: &str) -> Self::Input;
     fn part_one(input: Self::Input) -> Self::Output;
     fn part_two(input: Self::Input) -> Self::Output;
-    fn solve(input: &str) -> (String, String) {
-        (
-            Self::part_one(Self::parse(input)).to_string(),
-            Self::part_two(Self::parse(input)).to_string(),
+    fn solve(input: &str) -> String {
+        let now = Instant::now();
+        let input = Self::parse(input);
+        let parse_time = now.elapsed();
+
+        let p1_input = input.clone();
+        let p2_input = input;
+
+        let now = Instant::now();
+        let p1 = Self::part_one(p1_input);
+        let p1_time = now.elapsed();
+
+        let now = Instant::now();
+        let p2 = Self::part_two(p2_input);
+        let p2_time = now.elapsed();
+
+        format!(
+            "Solution for day {}:\n  Parse time: {:?}\n  Part 1: {} in {:?}\n  Part 2: {} in {:?}",
+            Self::day(),
+            parse_time,
+            p1,
+            p1_time,
+            p2,
+            p2_time
         )
     }
 }
 
-pub fn run_day(day: usize, input: &str) -> (String, String) {
+pub fn run_day(day: usize, input: &str) -> String {
     match day {
         1 => day01::Day01::solve(input),
-        _ => ("Not implemented".to_string(), "Not implemented".to_string()),
+        _ => "Not implemented".to_string(),
     }
 }
