@@ -44,11 +44,9 @@ number :: Integral a => Parser a
 number = L.signed (return ()) L.decimal
 
 pLines :: Parser a -> String -> [a]
-pLines parser input = case M.parse (traverse p (lines input)) "" input of
+pLines parser input = case M.parse (many newline *> some parser <* eof) "" input of
   Left err -> throw err
   Right a -> a
-  where
-    p l = setInput l *> parser <* eof <* setInput "\n" <* newline
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"

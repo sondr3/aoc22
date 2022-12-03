@@ -37,6 +37,7 @@ library
     AoC
     Day.Day01
     Day.Day02
+    Day.Day03
   other-modules: 
     Parsers
     Day
