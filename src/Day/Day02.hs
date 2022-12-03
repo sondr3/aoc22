@@ -4,62 +4,58 @@
 
 module Day.Day02 where
 
-import Control.Applicative.Combinators (choice)
 import Control.Monad (void)
 import Control.Monad.Combinators
-import Data.List (sort)
-import Data.Text (Text)
-import Data.Text qualified as T
-import Day ((:~>) (..))
-import Parsers (Parser, getExampleInput, getInput)
+import Data.Foldable (foldl')
+import Parsers (Parser, getExampleInput)
 import Text.Megaparsec.Char
-import Text.Megaparsec.Char.Lexer qualified as L
 
-data OpponentType = A | B | C
-  deriving stock (Read, Show)
+pScore :: (Char, Char) -> Int
+pScore ('A', 'X') = 1 + 3
+pScore ('A', 'Y') = 2 + 6
+pScore ('A', 'Z') = 3 + 0
+pScore ('B', 'X') = 1 + 0
+pScore ('B', 'Y') = 2 + 3
+pScore ('B', 'Z') = 3 + 6
+pScore ('C', 'X') = 1 + 6
+pScore ('C', 'Y') = 2 + 0
+pScore ('C', 'Z') = 3 + 3
+pScore _ = undefined
 
-data ResponseType = X | Y | Z
-  deriving stock (Read, Show)
+pEnd :: (Char, Char) -> Int
+pEnd ('A', 'X') = 3 + 0
+pEnd ('A', 'Y') = 1 + 3
+pEnd ('A', 'Z') = 2 + 6
+pEnd ('B', 'X') = 1 + 0
+pEnd ('B', 'Y') = 2 + 3
+pEnd ('B', 'Z') = 3 + 6
+pEnd ('C', 'X') = 2 + 0
+pEnd ('C', 'Y') = 3 + 3
+pEnd ('C', 'Z') = 1 + 6
+pEnd _ = undefined
 
-type Line = (OpponentType, ResponseType)
-
-pOpponentType :: Parser OpponentType
-pOpponentType =
-  choice
-    [ A <$ string "A",
-      B <$ string "B",
-      C <$ string "C"
-    ]
-
-pResponseType :: Parser ResponseType
-pResponseType =
-  choice
-    [ X <$ string "X",
-      Y <$ string "Y",
-      Z <$ string "Z"
-    ]
-
-pLine :: Parser Line
-pLine = do
-  pOp <- pOpponentType
+parser :: Parser (Char, Char)
+parser = do
+  x <- choice [char 'A', char 'B', char 'C']
   void $ string " "
-  res <- pResponseType
+  y <- choice [char 'X', char 'Y', char 'Z']
   void $ optional newline
-  pure (pOp, res)
+  pure (x, y)
 
-pScore :: Line -> Int
-pScore = undefined
+solve :: ((Char, Char) -> Int) -> [(Char, Char)] -> Int
+solve f = foldl' (\acc x -> f x + acc) 0
 
-partA :: [[Int]] -> Int
-partA xs = maximum $ map sum xs
+partA :: [(Char, Char)] -> Int
+partA = solve pScore
 
-partB :: [[Int]] -> Int
-partB xs = sum $ take 3 $ reverse $ sort $ map sum xs
+partB :: [(Char, Char)] -> Int
+partB = solve pEnd
 
 main :: IO ()
 main = do
-  input <- getExampleInput 2 pLine
-  print input
+  input <- getExampleInput 2 parser
+  print $ partA input
+  print $ partB input
 
 -- day02 :: [[Int]] :~> Int
 -- day02 = AoC {unParse = parser, unPartA = partA, unPartB = partB}
