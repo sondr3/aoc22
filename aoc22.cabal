@@ -56,4 +56,4 @@ test-suite aoc22-test
   other-modules:
     DaysSpec
   build-tool-depends: hspec-discover:hspec-discover ^>=2.10
-  build-depends: aoc22, hspec ^>=2.10, hspec-megaparsec ^>=2.2, megaparsec ^>=9.3
+  build-depends: aoc22, hspec ^>=2.10
