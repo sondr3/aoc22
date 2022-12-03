@@ -1,4 +1,3 @@
-{-# LANGUAGE RecordWildCards #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
 module Day where
@@ -6,7 +5,7 @@ module Day where
 import Data.Text (Text)
 import Formatting (formatToString)
 import Formatting.Clock (timeSpecs)
-import Parsers (Parser, getInput, pLines)
+import Parsers (Parser, pLines)
 import System.Clock (Clock (Monotonic), getTime)
 import Text.Printf (printf)
 
@@ -28,7 +27,9 @@ mkAoC p p1 p2 ans =
       part2 = p2,
       answers = ans,
       solve = \day input -> do
+        parsed_time <- getTime Monotonic
         let parsed = pLines p input
+        parsed_elapsed <- getTime Monotonic
 
         p1_time <- getTime Monotonic
         let p1_res = p1 parsed
@@ -41,4 +42,5 @@ mkAoC p p1 p2 ans =
         putStrLn $ printf "Solution for day %02d" day
         putStrLn $ "  Part 1: " <> show p1_res <> " in " <> formatToString timeSpecs p1_time p1_elapsed
         putStrLn $ "  Part 2: " <> show p2_res <> " in " <> formatToString timeSpecs p2_time p2_elapsed
+        putStrLn $ "  Parsed in " <> formatToString timeSpecs parsed_time parsed_elapsed
     }
