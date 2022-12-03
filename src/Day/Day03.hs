@@ -2,18 +2,19 @@
 
 module Day.Day03 where
 
+import AoC (AoC, mkAoC)
 import Control.Monad.Combinators
 import Data.List (intersect)
 import Data.Maybe (fromJust)
-import Parsers (Parser, getInput)
+import Parsers (Parser)
 import Text.Megaparsec hiding (getInput)
 import Text.Megaparsec.Char
 
 split :: [a] -> ([a], [a])
 split xs = splitAt ((length xs + 1) `div` 2) xs
 
-parser :: Parser ([Char], [Char])
-parser = split <$> takeWhile1P Nothing (/= '\n') <* optional eol
+parser :: Parser [([Char], [Char])]
+parser = many $ split <$> takeWhile1P Nothing (/= '\n') <* optional eol
 
 scores :: Char -> Int
 scores c = fromJust $ lookup c (zip ['a' .. 'z'] [1 ..] ++ zip ['A' .. 'Z'] [27 ..])
@@ -30,8 +31,5 @@ partB xs = sum $ map (scores . head) (threesect $ map (uncurry (++)) xs)
     threesect (x : y : z : ys) = x `intersect` y `intersect` z : threesect ys
     threesect _ = []
 
-main :: IO ()
-main = do
-  input <- getInput 3 parser
-  print $ partA input
-  print $ partB input
+day03 :: AoC
+day03 = mkAoC parser partA partB [157, 7795, 70, 2703]

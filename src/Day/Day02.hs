@@ -5,8 +5,8 @@
 module Day.Day02 where
 
 import AoC (AoC, mkAoC)
+import Control.Applicative.Combinators
 import Control.Monad (void)
-import Control.Monad.Combinators (choice, optional)
 import Data.Foldable (foldl')
 import Parsers (Parser)
 import Text.Megaparsec.Char (char, newline, string)
@@ -35,8 +35,8 @@ pEnd ('C', 'Y') = 3 + 3
 pEnd ('C', 'Z') = 1 + 6
 pEnd _ = undefined
 
-parser :: Parser (Char, Char)
-parser = do
+parser :: Parser [(Char, Char)]
+parser = many $ do
   x <- choice [char 'A', char 'B', char 'C']
   void $ string " "
   y <- choice [char 'X', char 'Y', char 'Z']
@@ -53,4 +53,4 @@ partB :: [(Char, Char)] -> Int
 partB = solve pEnd
 
 day02 :: AoC
-day02 = mkAoC parser partA partB
+day02 = mkAoC parser partA partB [15, 13924, 12, 13448]

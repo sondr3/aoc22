@@ -9,22 +9,23 @@ import Parsers (Parser, getInput)
 import System.Clock (Clock (Monotonic), getTime)
 import Text.Printf (printf)
 
-data AoC where
-  MkAoC ::
-    Show o =>
-    { parse :: Parser i,
-      part1 :: [i] -> o,
-      part2 :: [i] -> o,
-      solve :: Int -> IO ()
-    } ->
-    AoC
+data AoC = forall i o.
+  (Eq o, Show o) =>
+  MkAoC
+  { parse :: Parser i,
+    part1 :: i -> o,
+    part2 :: i -> o,
+    answers :: [o],
+    solve :: Int -> IO ()
+  }
 
-mkAoC :: Show o => Parser i -> ([i] -> o) -> ([i] -> o) -> AoC
-mkAoC p p1 p2 =
+mkAoC :: (Eq o, Show o) => Parser i -> (i -> o) -> (i -> o) -> [o] -> AoC
+mkAoC p p1 p2 ans =
   MkAoC
     { parse = p,
       part1 = p1,
       part2 = p2,
+      answers = ans,
       solve = \day -> do
         input <- getInput day p
 

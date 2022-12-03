@@ -19,12 +19,12 @@ inputName = printf "inputs/day%02d.input"
 exampleName :: Int -> FilePath
 exampleName = printf "inputs/day%02d.test"
 
-getInput :: Int -> Parser a -> IO [a]
+getInput :: Int -> Parser a -> IO a
 getInput i p = do
   input <- readFile (inputName i)
   pure $ pLines p input
 
-getExampleInput :: Int -> Parser a -> IO [a]
+getExampleInput :: Int -> Parser a -> IO a
 getExampleInput i p = do
   input <- readFile (exampleName i)
   pure $ pLines p input
@@ -40,7 +40,7 @@ type Parser = Parsec Void String
 number :: Integral a => Parser a
 number = L.signed (return ()) L.decimal
 
-pLines :: Parser a -> String -> [a]
-pLines parser input = case M.parse (many newline *> some parser <* eof) "" input of
+pLines :: Parser a -> String -> a
+pLines parser input = case M.parse (many eol *> parser <* many eol <* eof) "" input of
   Left err -> throw err
   Right a -> a

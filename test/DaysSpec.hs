@@ -1,51 +1,32 @@
 module DaysSpec (spec) where
 
-import AoC qualified
-import Data.Text (Text)
-import Day.Day01 qualified as Day01
-import Day.Day02 qualified as Day02
-import Day.Day03 qualified as Day03
+import AoC (AoC (..), Parser, getExampleInput, getInput)
+import Day.Day01 (day01)
+import Day.Day02 (day02)
+import Day.Day03 (day03)
 import GHC.IO (unsafePerformIO)
 import Test.Hspec (Spec, describe, it, parallel, shouldBe)
+import Text.Printf (printf)
 
-getTestExample :: Int -> Text
-getTestExample day = unsafePerformIO $ AoC.rawExampleInput day
+getTestPExample :: Int -> Parser a -> a
+getTestPExample day parser = unsafePerformIO $ getExampleInput day parser
 
-getTestInput :: Int -> Text
-getTestInput day = unsafePerformIO $ AoC.rawInput day
+getTestPInput :: Int -> Parser a -> a
+getTestPInput day parser = unsafePerformIO $ getInput day parser
 
-getTestPExample :: Int -> AoC.Parser a -> [a]
-getTestPExample day parser = unsafePerformIO $ AoC.getExampleInput day parser
-
-getTestPInput :: Int -> AoC.Parser a -> [a]
-getTestPInput day parser = unsafePerformIO $ AoC.getInput day parser
+testDay :: Int -> AoC.AoC -> Spec
+testDay day MkAoC {parse, part1, part2, answers} = describe (printf "Day %02d" day) $ do
+  let input = getTestPInput day parse
+      example = getTestPExample day parse
+  describe "part 1" $ do
+    it "example" $ part1 example `shouldBe` head answers
+    it "input" $ part1 input `shouldBe` answers !! 1
+  describe "part 2" $ do
+    it "example" $ part2 example `shouldBe` answers !! 2
+    it "input" $ part2 input `shouldBe` answers !! 3
 
 spec :: Spec
 spec = parallel $ do
-  describe "Day 01" $ do
-    let input = Day01.parser $ getTestInput 1
-    let example = Day01.parser $ getTestExample 1
-    describe "part 1" $ do
-      it "example" $ Day01.partA example `shouldBe` 24000
-      it "input" $ Day01.partA input `shouldBe` 68442
-    describe "part 2" $ do
-      it "example" $ Day01.partB example `shouldBe` 45000
-      it "input" $ Day01.partB input `shouldBe` 204837
-  describe "Day 02" $ do
-    let input = getTestPInput 2 Day02.parser
-    let example = getTestPExample 2 Day02.parser
-    describe "part 1" $ do
-      it "example" $ Day02.partA example `shouldBe` 15
-      it "input" $ Day02.partA input `shouldBe` 13924
-    describe "part 2" $ do
-      it "example" $ Day02.partB example `shouldBe` 12
-      it "input" $ Day02.partB input `shouldBe` 13448
-  describe "Day 03" $ do
-    let input = getTestPInput 3 Day03.parser
-    let example = getTestPExample 3 Day03.parser
-    describe "part 1" $ do
-      it "example" $ Day03.partA example `shouldBe` 157
-      it "input" $ Day03.partA input `shouldBe` 7795
-    describe "part 2" $ do
-      it "example" $ Day03.partB example `shouldBe` 70
-      it "example" $ Day03.partB input `shouldBe` 2703
+  testDay 1 day01
+  testDay 2 day02
+  testDay 3 day03
