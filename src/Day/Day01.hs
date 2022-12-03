@@ -19,7 +19,7 @@ parser = map (map read . words . T.unpack) . T.splitOn "\n\n"
 
 parser' :: Parser [[Int]]
 parser' = do
-  bags <- map (map T.pack) . head <$> (group `sepBy` eol)
+  bags <- head <$> (group `sepBy` eol)
   pure $ map ((map fst . rights) . map decimal) bags
   where
     group = dbg "group" $ some num `sepBy` eol

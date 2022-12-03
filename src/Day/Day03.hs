@@ -6,6 +6,7 @@ import AoC (AoC, mkAoC)
 import Control.Monad.Combinators
 import Data.List (intersect)
 import Data.Maybe (fromJust)
+import Data.Text qualified as T
 import Parsers (Parser)
 import Text.Megaparsec hiding (getInput)
 import Text.Megaparsec.Char
@@ -14,7 +15,7 @@ split :: [a] -> ([a], [a])
 split xs = splitAt ((length xs + 1) `div` 2) xs
 
 parser :: Parser [([Char], [Char])]
-parser = many $ split <$> takeWhile1P Nothing (/= '\n') <* optional eol
+parser = many $ (split . T.unpack <$> takeWhile1P Nothing (/= '\n')) <* optional eol
 
 scores :: Char -> Int
 scores c = fromJust $ lookup c (zip ['a' .. 'z'] [1 ..] ++ zip ['A' .. 'Z'] [27 ..])

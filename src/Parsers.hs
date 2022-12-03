@@ -21,12 +21,12 @@ exampleName = printf "inputs/day%02d.test"
 
 getInput :: Int -> Parser a -> IO a
 getInput i p = do
-  input <- readFile (inputName i)
+  input <- TIO.readFile (inputName i)
   pure $ pLines p input
 
 getExampleInput :: Int -> Parser a -> IO a
 getExampleInput i p = do
-  input <- readFile (exampleName i)
+  input <- TIO.readFile (exampleName i)
   pure $ pLines p input
 
 rawExampleInput :: Int -> IO Text
@@ -35,12 +35,12 @@ rawExampleInput day = T.strip <$> TIO.readFile (exampleName day)
 rawInput :: Int -> IO Text
 rawInput day = T.strip <$> TIO.readFile (inputName day)
 
-type Parser = Parsec Void String
+type Parser = Parsec Void Text
 
 number :: Integral a => Parser a
 number = L.signed (return ()) L.decimal
 
-pLines :: Parser a -> String -> a
+pLines :: Parser a -> Text -> a
 pLines parser input = case M.parse (many eol *> parser <* many eol <* eof) "" input of
   Left err -> throw err
   Right a -> a
