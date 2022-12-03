@@ -1,27 +1,45 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
 module Day where
 
-import Data.Text (Text)
-import Parsers (rawInput)
+import Formatting (formatToString)
+import Formatting.Clock (timeSpecs)
+import Parsers (Parser, getInput)
+import System.Clock (Clock (Monotonic), getTime)
 import Text.Printf (printf)
 
-data a :~> b = AoC
-  { unParse :: Text -> a,
-    unPartA :: a -> b,
-    unPartB :: a -> b
-  }
+data AoC where
+  MkAoC ::
+    Show o =>
+    { parse :: Parser i,
+      part1 :: [i] -> o,
+      part2 :: [i] -> o,
+      solve :: Int -> IO ()
+    } ->
+    AoC
 
-runDay :: Show b => Int -> a :~> b -> IO ()
-runDay day AoC {..} = do
-  input <- unParse <$> rawInput day
-  let a = unPartA input
-      b = unPartB input
+mkAoC :: Show o => Parser i -> ([i] -> o) -> ([i] -> o) -> AoC
+mkAoC p p1 p2 =
+  MkAoC
+    { parse = p,
+      part1 = p1,
+      part2 = p2,
+      solve = \day -> do
+        input <- getInput day p
 
-  putStrLn $ printf "Day %02d solutions" day
-  putStrLn $ "solution A: " <> show a
-  putStrLn $ "solution B: " <> show b
+        p1_time <- getTime Monotonic
+        let p1_res = p1 input
+        p1_elapsed <- getTime Monotonic
+
+        p2_time <- getTime Monotonic
+        let p2_res = p2 input
+        p2_elapsed <- getTime Monotonic
+
+        putStrLn $ printf "Solution for day %02d" day
+        putStrLn $ "  Part 1: " <> show p1_res <> " in " <> formatToString timeSpecs p1_time p1_elapsed
+        putStrLn $ "  Part 2: " <> show p2_res <> " in " <> formatToString timeSpecs p2_time p2_elapsed
+    }
+
+runDay :: Int -> AoC -> IO ()
+runDay day MkAoC {..} = solve day

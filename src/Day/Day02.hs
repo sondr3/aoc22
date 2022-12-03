@@ -4,11 +4,12 @@
 
 module Day.Day02 where
 
+import AoC (AoC, mkAoC)
 import Control.Monad (void)
-import Control.Monad.Combinators
+import Control.Monad.Combinators (choice, optional)
 import Data.Foldable (foldl')
-import Parsers (Parser, getExampleInput)
-import Text.Megaparsec.Char
+import Parsers (Parser)
+import Text.Megaparsec.Char (char, newline, string)
 
 pScore :: (Char, Char) -> Int
 pScore ('A', 'X') = 1 + 3
@@ -51,11 +52,5 @@ partA = solve pScore
 partB :: [(Char, Char)] -> Int
 partB = solve pEnd
 
-main :: IO ()
-main = do
-  input <- getExampleInput 2 parser
-  print $ partA input
-  print $ partB input
-
--- day02 :: [[Int]] :~> Int
--- day02 = AoC {unParse = parser, unPartA = partA, unPartB = partB}
+day02 :: AoC
+day02 = mkAoC parser partA partB

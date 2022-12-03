@@ -1,6 +1,3 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-missing-export-lists #-}
 
 module Parsers where
@@ -10,8 +7,8 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
 import Data.Void (Void)
-import Text.Megaparsec hiding (parse)
-import Text.Megaparsec qualified as M
+import Text.Megaparsec hiding (getInput, parse)
+import Text.Megaparsec qualified as M hiding (getInput)
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
 import Text.Printf (printf)
@@ -47,6 +44,3 @@ pLines :: Parser a -> String -> [a]
 pLines parser input = case M.parse (many newline *> some parser <* eof) "" input of
   Left err -> throw err
   Right a -> a
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
