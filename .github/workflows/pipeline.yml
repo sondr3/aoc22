@@ -1,0 +1,57 @@
+name: pipeline
+
+on: [push, pull_request]
+
+jobs:
+  cabal:
+    name: AoC 22
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Haskell
+        id: setup-haskell-cabal
+        uses: haskell/actions/setup@v2
+        with:
+          ghc-version: 9.2
+          cabal-version: 3.8
+
+      - name: Formatting
+        uses: mrkkrp/ormolu-action@v7
+
+      - name: Set up HLint
+        uses: haskell/actions/hlint-setup@v2
+        with:
+          version: 3.5
+      
+      - name: 'Run HLint'
+        uses: haskell/actions/hlint-run@v2
+        with:
+          path: '["src/", "app/", "test/"]'
+
+      - name: Configure
+        run: cabal configure --enable-tests --enable-benchmarks --enable-documentation --test-show-details=direct --write-ghc-environment-files=always
+
+      - name: Freeze
+        run: cabal freeze
+
+      - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+            dist-newstyle
+          key: ${{ runner.os }}-ghc-${{ hashFiles('cabal.project.freeze') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ghc-${{ hashFiles('cabal.project.freeze') }}-
+            ${{ runner.os }}-ghc-
+
+      - name: Install dependencies
+        run: cabal build all --only-dependencies
+
+      - name: Build
+        run: cabal build all 
+
+      - name: Test
+        run: cabal test all 
