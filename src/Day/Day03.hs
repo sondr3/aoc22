@@ -3,7 +3,6 @@
 module Day.Day03 where
 
 import AoC (AoC, mkAoC)
-import Control.Monad.Combinators
 import Data.List (intersect)
 import Data.Maybe (fromJust)
 import Data.Text qualified as T
