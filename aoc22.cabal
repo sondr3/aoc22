@@ -6,7 +6,7 @@ maintainer: sondre@eons.io
 license: MIT
 license-file: LICENSE
 homepage: https://www.eons.io
-tested-with: GHC ==9.2
+tested-with: GHC ==9.2.5
 extra-source-files: README.md
 build-type: Simple
 
@@ -48,11 +48,12 @@ executable aoc22
   main-is: Main.hs
   build-depends: aoc22
 
--- test-suite aoc22-test
---   import: config
---   type: exitcode-stdio-1.0
---   hs-source-dirs: test
---   main-is: Spec.hs
---   build-tool-depends: hspec-discover:hspec-discover ^>=2.10
---   build-depends: aoc22, hspec ^>=2.10, hspec-megaparsec ^>=2.2, megaparsec ^>=9.3
---   other-modules: DayTests
+test-suite aoc22-test
+  import: config
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  other-modules:
+    DaysSpec
+  build-tool-depends: hspec-discover:hspec-discover ^>=2.10
+  build-depends: aoc22, hspec ^>=2.10, hspec-megaparsec ^>=2.2, megaparsec ^>=9.3

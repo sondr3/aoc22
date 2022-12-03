@@ -1,4 +1,4 @@
-module DayTests (spec) where
+module DaysSpec (spec) where
 
 import AoC (rawExampleInput, rawInput)
 import Data.Text (Text)
