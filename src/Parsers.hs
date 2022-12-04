@@ -44,3 +44,7 @@ pLines :: Parser a -> Text -> a
 pLines parser input = case M.parse (many eol *> parser <* many eol <* eof) "" input of
   Left err -> throw err
   Right a -> a
+
+getRight :: Either a b -> b
+getRight (Right x) = x
+getRight _ = error "getRight called with Left value"
