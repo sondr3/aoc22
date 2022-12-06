@@ -6,6 +6,7 @@ import Day.Day02 (day02)
 import Day.Day03 (day03)
 import Day.Day04 (day04)
 import Day.Day05 (day05)
+import Day.Day06 (day06)
 import GHC.IO (unsafePerformIO)
 import Test.Hspec (Spec, describe, it, parallel, shouldBe)
 import Text.Printf (printf)
@@ -34,3 +35,4 @@ spec = parallel $ do
   testDay 3 day03
   testDay 4 day04
   testDay 5 day05
+  testDay 6 day06
