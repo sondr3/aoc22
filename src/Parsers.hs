@@ -4,7 +4,6 @@ module Parsers where
 
 import Control.Exception (throw)
 import Data.Text (Text)
-import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
 import Data.Void (Void)
 import Text.Megaparsec hiding (getInput, parse)
@@ -30,10 +29,10 @@ getExampleInput i p = do
   pure $ pLines p input
 
 rawExampleInput :: Int -> IO Text
-rawExampleInput day = T.strip <$> TIO.readFile (exampleName day)
+rawExampleInput day = TIO.readFile (exampleName day)
 
 rawInput :: Int -> IO Text
-rawInput day = T.strip <$> TIO.readFile (inputName day)
+rawInput day = TIO.readFile (inputName day)
 
 type Parser = Parsec Void Text
 
@@ -41,7 +40,7 @@ number :: Integral a => Parser a
 number = L.signed (return ()) L.decimal
 
 pLines :: Parser a -> Text -> a
-pLines parser input = case M.parse (many eol *> parser <* many eol <* eof) "" input of
+pLines parser input = case M.parse (many eol *> parser <* many eol) "" input of
   Left err -> throw err
   Right a -> a
 
