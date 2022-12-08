@@ -1,8 +1,8 @@
-mod day;
+mod days;
 
 use std::time::Instant;
 
-use day::*;
+use days::*;
 
 #[macro_export]
 macro_rules! tests {
@@ -27,7 +27,7 @@ macro_rules! tests {
 
         #[test]
         fn part_1_example() {
-            assert_eq!($p1, $day::part_one($day::parse_one(EXAMPLE)));
+            assert_eq!($p1, $day::part_one($day::parse(EXAMPLE)));
         }
     };
     ($day: ident, $p1: expr, $a1: expr) => {
@@ -35,7 +35,7 @@ macro_rules! tests {
 
         #[test]
         fn part_1() {
-            assert_eq!($a1, $day::part_one($day::parse_one(INPUT)));
+            assert_eq!($a1, $day::part_one($day::parse(INPUT)));
         }
     };
     ($day: ident, $p1: expr, $a1: expr, $p2: expr) => {
@@ -43,7 +43,7 @@ macro_rules! tests {
 
         #[test]
         fn part_2_example() {
-            assert_eq!($p2, $day::part_two($day::parse_two(EXAMPLE)));
+            assert_eq!($p2, $day::part_two($day::parse(EXAMPLE)));
         }
     };
     ($day: ident, $p1: expr, $a1: expr, $p2: expr, $a2: expr) => {
@@ -51,7 +51,7 @@ macro_rules! tests {
 
         #[test]
         fn part_2() {
-            assert_eq!($a2, $day::part_two($day::parse_two(INPUT)));
+            assert_eq!($a2, $day::part_two($day::parse(INPUT)));
         }
     };
 }
@@ -61,24 +61,20 @@ trait AoC {
     type Input: Clone;
 
     fn day() -> usize;
-    fn parse_one(input: &str) -> Self::Input;
-    fn parse_two(input: &str) -> Self::Input {
-        Self::parse_one(input)
-    }
+    fn parse(input: &str) -> Self::Input;
     fn part_one(input: Self::Input) -> Self::Output;
     fn part_two(input: Self::Input) -> Self::Output;
     fn solve(input: &str) -> String {
         let now = Instant::now();
-        let p1_input = Self::parse_one(input);
-        let p1_parse_time = now.elapsed();
+        let input = Self::parse(input);
+        let parse_time = now.elapsed();
+
+        let p1_input = input.clone();
+        let p2_input = input;
 
         let now = Instant::now();
         let p1 = Self::part_one(p1_input);
         let p1_time = now.elapsed();
-
-        let now = Instant::now();
-        let p2_input = Self::parse_one(input);
-        let p2_parse_time = now.elapsed();
 
         let now = Instant::now();
         let p2 = Self::part_two(p2_input);
@@ -87,19 +83,20 @@ trait AoC {
         format!(
             r#"
 Solution for day {:02}:
-  Part 1: {} in {:?}, parsed in {:?} 
-  Part 2: {} in {:?}, parsed in {:?}"#,
+  Parsed input in {:?}
+  Part 1: {} in {:?} 
+  Part 2: {} in {:?}"#,
             Self::day(),
+            parse_time,
             p1,
             p1_time,
-            p1_parse_time,
             p2,
             p2_time,
-            p2_parse_time
         )
     }
 }
 
+#[must_use]
 pub fn run_day(day: usize, input: &str) -> String {
     match day {
         1 => day01::Day01::solve(input),

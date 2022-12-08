@@ -42,7 +42,7 @@ impl AoC for Day02 {
         2
     }
 
-    fn parse_one(input: &str) -> Self::Input {
+    fn parse(input: &str) -> Self::Input {
         input
             .lines()
             .map(|l| {
