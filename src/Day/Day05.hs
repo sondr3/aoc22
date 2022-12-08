@@ -2,7 +2,7 @@
 
 module Day.Day05 where
 
-import AoC (AoC, getRight, mkAoC)
+import AoC (AoC, mkAoC)
 import Control.Arrow (Arrow ((&&&)))
 import Data.Char (isDigit)
 import Data.Either (rights)
@@ -16,9 +16,6 @@ import Text.Megaparsec
 
 data Move = Move {cnt :: Int, from :: Int, to :: Int}
   deriving stock (Show)
-
-num :: Text -> Int
-num = (fst . getRight) . decimal
 
 buildMove :: [Int] -> Move
 buildMove (c : f : t : _) = Move {cnt = c, from = f, to = t}

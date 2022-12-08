@@ -5,6 +5,7 @@ module Parsers where
 import Control.Exception (throw)
 import Data.Text (Text)
 import Data.Text.IO qualified as TIO
+import Data.Text.Read (decimal)
 import Data.Void (Void)
 import Text.Megaparsec hiding (getInput, parse)
 import Text.Megaparsec qualified as M hiding (getInput)
@@ -47,3 +48,6 @@ pLines parser input = case M.parse (many eol *> parser <* many eol) "" input of
 getRight :: Either a b -> b
 getRight (Right x) = x
 getRight _ = error "getRight called with Left value"
+
+num :: Text -> Int
+num = (fst . getRight) . decimal
