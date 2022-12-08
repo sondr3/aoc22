@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 use crate::{tests, AoC};
 
 pub struct Day01;
@@ -24,13 +22,10 @@ impl AoC for Day01 {
     }
 
     fn part_two(input: Self::Input) -> Self::Output {
-        input
-            .iter()
-            .map(|e| e.iter().sum::<usize>())
-            .sorted()
-            .rev()
-            .take(3)
-            .sum()
+        let mut res: Vec<_> = input.iter().map(|e| e.iter().sum::<usize>()).collect();
+        res.sort_unstable();
+
+        res.iter().rev().take(3).sum()
     }
 }
 
