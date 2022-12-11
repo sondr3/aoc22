@@ -129,6 +129,15 @@ pub struct MonkeyBusiness {
 }
 
 impl MonkeyBusiness {
+    fn solve<F>(&mut self, rounds: usize, func: F) -> usize
+    where
+        F: Fn(usize) -> usize + Copy,
+    {
+        self.run_rounds(rounds, func);
+        self.inspected.sort_unstable();
+        self.inspected.iter().rev().take(2).product()
+    }
+
     fn run_rounds<F>(&mut self, count: usize, func: F)
     where
         F: Fn(usize) -> usize + Copy,
@@ -186,23 +195,12 @@ impl AoC for Day11 {
     }
 
     fn part_one(mut input: Self::Input) -> Self::Output {
-        let func = move |x| div(x, 3);
-        input.run_rounds(20, func);
-        let mut inspected: Vec<_> = input.inspected.clone();
-        inspected.sort_unstable();
-
-        inspected.iter().rev().take(2).product()
+        input.solve(20, move |x| div(x, 3))
     }
 
     fn part_two(mut input: Self::Input) -> Self::Output {
         let prod = input.monkeys.iter().map(|m| m.test).product();
-        let func = move |x| modulo(x, prod);
-
-        input.run_rounds(10000, func);
-        let mut inspected: Vec<_> = input.inspected.clone();
-        inspected.sort_unstable();
-
-        inspected.iter().rev().take(2).product()
+        input.solve(10_000, move |x| modulo(x, prod))
     }
 }
 
