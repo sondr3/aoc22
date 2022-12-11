@@ -3,14 +3,14 @@ use crate::{tests, AoC};
 pub struct DayXX;
 
 impl AoC for DayXX {
-    type Output = todo!();
-    type Input = todo!();
+    type Output = usize;
+    type Input = usize;
 
     fn day() -> usize {
         todo!()
     }
 
-    fn parse_one(input: &str) -> Self::Input {
+    fn parse(input: &str) -> Self::Input {
         todo!()
     }
 
