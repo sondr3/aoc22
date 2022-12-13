@@ -10,6 +10,7 @@ import Day.Day04 (day04)
 import Day.Day05 (day05)
 import Day.Day06 (day06)
 import Day.Day07 (day07)
+import Day.Day13 (day13)
 import System.Environment (getArgs)
 import System.Exit (die)
 
@@ -26,7 +27,7 @@ getDay 9 = undefined
 getDay 10 = undefined
 getDay 11 = undefined
 getDay 12 = undefined
-getDay 13 = undefined
+getDay 13 = day13
 getDay 14 = undefined
 getDay 15 = undefined
 getDay 16 = undefined
