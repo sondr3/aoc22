@@ -14,10 +14,10 @@ import Text.Megaparsec.Char.Lexer qualified as L
 import Text.Printf (printf)
 
 inputName :: Int -> FilePath
-inputName = printf "inputs/day%02d.input"
+inputName = printf "inputs/Day%02d.input"
 
 exampleName :: Int -> FilePath
-exampleName = printf "inputs/day%02d.test"
+exampleName = printf "inputs/Day%02d.test"
 
 getInput :: Int -> Parser a -> IO a
 getInput i p = do
