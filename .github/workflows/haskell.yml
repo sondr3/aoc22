@@ -1,6 +1,10 @@
-name: pipeline
+name: haskell pipeline
 
-on: [push, pull_request]
+on: 
+  push:
+    paths:
+      - "**/*.hs"
+      - "**/*.cabal"
 
 jobs:
   cabal:
