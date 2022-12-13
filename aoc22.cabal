@@ -43,6 +43,7 @@ library
     Day.Day05
     Day.Day06
     Day.Day07
+    Day.Day13
     Parsers
 
   build-depends:
@@ -52,6 +53,7 @@ library
     , megaparsec ^>=9.3
     , parser-combinators ^>=1.3
     , mtl ^>=2.3
+    , split ^>=0.2
     , text ^>=2
 
 executable aoc
