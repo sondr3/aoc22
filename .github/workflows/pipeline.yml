@@ -3,29 +3,55 @@ name: pipeline
 on: [push, pull_request]
 
 jobs:
-  check:
+  cabal:
+    name: AoC 22
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v3
+      
+      - name: Setup Haskell
+        id: setup-haskell-cabal
+        uses: haskell/actions/setup@v2
         with:
-          components: rustfmt, clippy
+          ghc-version: 9.2
+          cabal-version: 3.8
 
-      - uses: Swatinem/rust-cache@v2
+      - name: Formatting
+        uses: mrkkrp/ormolu-action@v7
 
-      - name: build
-        run: cargo test --no-run
+      - name: Set up HLint
+        uses: haskell/actions/hlint-setup@v2
+        with:
+          version: 3.5
+      
+      - name: 'Run HLint'
+        uses: haskell/actions/hlint-run@v2
+        with:
+          path: '["src/", "app/", "test/"]'
 
-      - name: test
-        run: cargo test -- --nocapture --quiet
+      - name: Configure
+        run: cabal configure --enable-tests --enable-benchmarks --enable-documentation --test-show-details=direct --write-ghc-environment-files=always
 
-      - name: formatting
-        run: cargo fmt --all -- --check
+      - name: Freeze
+        run: cabal freeze
 
-      - name: check
-        run: cargo check
+      - name: Cache ~/.cabal/packages, ~/.cabal/store and dist-newstyle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+            dist-newstyle
+          key: ${{ runner.os }}-ghc-${{ hashFiles('cabal.project.freeze') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ghc-${{ hashFiles('cabal.project.freeze') }}-
+            ${{ runner.os }}-ghc-
 
-      - name: clippy
-        run: cargo clippy -- -D warnings
+      - name: Install dependencies
+        run: cabal build all --only-dependencies
+
+      - name: Build
+        run: cabal build all 
+
+      - name: Test
+        run: cabal test all 
